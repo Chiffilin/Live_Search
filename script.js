@@ -1,54 +1,28 @@
-var cities = ["Одесса", "Киев", "Житомир", "Лондон", "Нью-Йорк", "Львов", "Черновцы", "Берлин", "Москва"];
+const $ul = document.querySelector('.ul');
+const $query = document.querySelector('.input');
 
-function getOccurrenceOfArrayByString(strings, currentString) {
-	let arrayOfOccurences = [];
-	if (currentString === "") {
-		return arrayOfOccurences;
-	}
-	let upperCaseCurrentString = currentString.toUpperCase();
-	for (let string of strings) {
-		let upperCaseString = string.toUpperCase();
-		if (upperCaseString.indexOf(upperCaseCurrentString) > -1) {
-			arrayOfOccurences.push(string);
-		}
-	}
-	return arrayOfOccurences;
+let list = ['Tayota', 'Nissan', 'Audi', 'Citroen', 'Chevrolet', 'Cadillac', 'Acura'];
+listGenerator(list);
+
+function listGenerator(list) {
+    if(!list.length) {
+        $ul.innerHTML = '<li style = "list-style: none;">Not Found</li>'
+    }
+    else {
+        let template = '';
+        for (let i = 0; i < list.length; i++) {
+            template += '<li data-index=' + i + '>' + list[i] + '</li>';
+        }
+        $ul.innerHTML = template;
+    }
 }
 
-function fillSearchListByArray(array) {
-	clearSearchList();
-	var list = document.querySelector(".search__list");
-	if (array.length === 0) {
-		var li = document.createElement("li");
-		li.innerHTML = "Not Found";
-		list.appendChild(li);
-		return;
-	}
-	for (let element of array) {
-		var li = document.createElement("li");
-		li.innerHTML = element;
-		list.addEventListener("click", function (e) {
-			var liElement = e.target;
-			if (liElement.tagName === "LI") {
-				var input = document.querySelector(".liveSearch input");
-				input.value = liElement.innerHTML;
-			}
-		});
-		list.appendChild(li);
-	}
-	list.classList.add("open");
-}
+$query.addEventListener('input', function () {
+    let value = this.value.toLowerCase();
 
-function clearSearchList() {
-	var list = document.querySelector(".search__list");
-	while (list.firstChild) {
-		list.removeChild(list.firstChild);
-	}
-}
+    let buffer = list.filter(function (elem) {
+        return ~elem.toLowerCase().indexOf(value);
+    })
 
-var liveSearchInput = document.querySelector(".liveSearch input");
-liveSearchInput.addEventListener("input", function (e) {
-	var inputValue = e.target.value;
-	let arrayOfOccurences = getOccurrenceOfArrayByString(cities, inputValue);
-	fillSearchListByArray(arrayOfOccurences);
-});
+    listGenerator(buffer);
+})
